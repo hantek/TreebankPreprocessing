@@ -17,7 +17,10 @@ def make_sure_path_exists(path):
 
 
 def eprint(*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)
+    for i in args:
+        print(i),
+    print(" ")
+    # print(*args, file=sys.stderr, **kwargs)
 
 
 def combine_files(fids, out, tb):
@@ -25,7 +28,7 @@ def combine_files(fids, out, tb):
     total_sentence = 0
     for n, file in enumerate(fids):
         if n % 10 == 0 or n == len(fids) - 1:
-            print("%c%.2f%%" % (13, (n + 1) / float(len(fids)) * 100), end='')
+            print("%c%.2f%%" % (13, (n + 1) / float(len(fids)) * 100)),
         sents = tb.parsed_sents(file)
         for s in sents:
             out.write(s.pformat(margin=sys.maxsize))

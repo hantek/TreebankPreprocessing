@@ -5,26 +5,36 @@
 import argparse
 from os import listdir
 from os.path import isfile, join, isdir
-
 import nltk
 
 from utility import make_sure_path_exists, eprint, combine_files
 
+import pdb
+
 
 def convert(ctb_root, out_root):
     ctb_root = join(ctb_root, 'bracketed')
-    fids = [f for f in listdir(ctb_root) if isfile(join(ctb_root, f)) and f.endswith('.fid')]
+    fids = [f for f in listdir(ctb_root) if isfile(join(ctb_root, f)) and \
+        (f.endswith('.nw') or \
+        (f.endswith('.mz') or \
+        (f.endswith('.wb') or \
+        ]
     make_sure_path_exists(out_root)
+
+    pdb.set_trace()
+
     for f in fids:
         with open(join(ctb_root, f), encoding='GB2312') as src, open(join(out_root, f), 'w') as out:
             in_s_tag = False
             try:
                 for line in src:
-                    if line.startswith('<S ID='):
+                    if line.startswith('<S ID=') or line.startswith('<seg id='):
                         in_s_tag = True
-                    elif line.startswith('</S>'):
+                    elif line.startswith('</S>') or line.startswith('</seg>'):
                         in_s_tag = False
-                    elif in_s_tag:
+                    elif line.startswith('<'):
+                        continue
+                    elif in_s_tag and len(line) > 1:
                         out.write(line)
             except:
                 pass
