@@ -6,6 +6,8 @@ import errno
 from os import makedirs
 
 import sys
+reload(sys)
+sys.setdefaultencoding('utf-8') 
 
 
 def make_sure_path_exists(path):
@@ -17,9 +19,7 @@ def make_sure_path_exists(path):
 
 
 def eprint(*args, **kwargs):
-    for i in args:
-        print(i),
-    print(" ")
+    print("There is an error.")
     # print(*args, file=sys.stderr, **kwargs)
 
 
@@ -37,3 +37,4 @@ def combine_files(fids, out, tb):
     print()
     print('%d sentences.' % total_sentence)
     print()
+

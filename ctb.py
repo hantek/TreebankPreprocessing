@@ -15,16 +15,15 @@ import pdb
 def convert(ctb_root, out_root):
     ctb_root = join(ctb_root, 'bracketed')
     fids = [f for f in listdir(ctb_root) if isfile(join(ctb_root, f)) and \
-        (f.endswith('.nw') or \
-        (f.endswith('.mz') or \
-        (f.endswith('.wb') or \
-        ]
+        f.endswith('.nw') or \
+        f.endswith('.mz') or \
+        f.endswith('.wb')]
     make_sure_path_exists(out_root)
 
-    pdb.set_trace()
-
     for f in fids:
-        with open(join(ctb_root, f), encoding='GB2312') as src, open(join(out_root, f), 'w') as out:
+        with open(join(ctb_root, f), 'r') as src, \
+             open(join(out_root, f.split('.')[0] + '.fid'), 'w') as out:
+            # encoding='GB2312'
             in_s_tag = False
             try:
                 for line in src:
@@ -44,9 +43,7 @@ def combine_fids(fids, out_path):
     print('Generating ' + out_path)
     files = []
     for fid in fids:
-        f = 'chtb_%03d.fid' % fid
-        if fid > 1000:
-            f = 'chtb_%04d.fid' % fid
+        f = 'chtb_%04d.fid' % fid
         if isfile(join(ctb_in_nltk, f)):
             files.append(f)
     with open(out_path, 'w') as out:
@@ -54,7 +51,8 @@ def combine_fids(fids, out_path):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Combine Chinese Treebank 5.1 fid files into train/dev/test set')
+    parser = argparse.ArgumentParser(
+        description='Combine Chinese Treebank 5.1 fid files into train/dev/test set')
     parser.add_argument("--ctb", required=True,
                         help='The root path to Chinese Treebank 5.1')
     parser.add_argument("--output", required=True,
@@ -80,9 +78,9 @@ if __name__ == '__main__':
     from nltk.corpus import BracketParseCorpusReader, LazyCorpusLoader
 
     ctb = LazyCorpusLoader(
-        'ctb', BracketParseCorpusReader, r'chtb_.*\.fid',
+        'ctb', BracketParseCorpusReader, r'chtb_.*\.*',
         tagset='unknown')
-
+    
     training = list(range(1, 815 + 1)) + list(range(1001, 1136 + 1))
     development = list(range(886, 931 + 1)) + list(range(1148, 1151 + 1))
     test = list(range(816, 885 + 1)) + list(range(1137, 1147 + 1))
